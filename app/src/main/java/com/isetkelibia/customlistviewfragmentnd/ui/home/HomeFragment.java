@@ -10,12 +10,12 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.isetkelibia.customlistviewfragmentnd.R;
 
@@ -25,26 +25,20 @@ import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
-    private ListView maListViewPerso;
+    HomeViewModel homeViewModel;
+    ListView myListViewPerso;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+                new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-
+        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         /* ListView */
         // Récupération de la "ListView" créée dans le fichier activity_main.xml
-        maListViewPerso = root.findViewById(R.id.list_office);
+        myListViewPerso = root.findViewById(R.id.list_office);
 
         // Création de la "ArrayList" qui nous permettra de remplir la "ListView"
         ArrayList<HashMap<String, String>> listItems = new ArrayList<>();
@@ -66,10 +60,10 @@ public class HomeFragment extends Fragment {
                 getResources().getString(R.string.outlook_description)};
         // Icones (images) des items
         String[] icon = new String[]{
-                String.valueOf(R.drawable.word),
-                String.valueOf(R.drawable.excel),
-                String.valueOf(R.drawable.powerpoint),
-                String.valueOf(R.drawable.outlook)};
+                String.valueOf(R.mipmap.word),
+                String.valueOf(R.mipmap.excel),
+                String.valueOf(R.mipmap.powerpoint),
+                String.valueOf(R.mipmap.outlook)};
         // Creation des items de la liste
         for (int i = 0; i < 4; i++) {
             item = new HashMap<>();
@@ -89,31 +83,24 @@ public class HomeFragment extends Fragment {
                 new String[]{"title", "description", "icon"},
                 new int[]{R.id.title, R.id.description, R.id.icon});
         // Association de l’adapter à la liste
-        maListViewPerso.setAdapter(adapter);
+        myListViewPerso.setAdapter(adapter);
 
         // Interaction avec les items de la liste
-        maListViewPerso.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap item = (HashMap) maListViewPerso.getItemAtPosition(position);
-                Toast.makeText(getActivity(), "" + item.get("title"), Toast.LENGTH_SHORT).show();
-            }
+        myListViewPerso.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedItem = ((TextView) view.findViewById(R.id.title)).getText().toString();
+            Toast.makeText(getActivity(), selectedItem, Toast.LENGTH_SHORT).show();
         });
 
-        maListViewPerso.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap item = (HashMap) maListViewPerso.getItemAtPosition(position);
-                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        myListViewPerso.setOnItemLongClickListener((parent, view, position, id) -> {
+            String selectedItem = ((TextView) view.findViewById(R.id.title)).getText().toString();
+            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
 
-                builder.setTitle(getString(R.string.adb_title));
-                builder.setMessage(getString(R.string.adb_start_message) + " : " + item.get("title"));
-                builder.setIcon(R.drawable.office);
-                builder.setPositiveButton(getString(R.string.adb_btn_ok), null);
-                builder.show();
-                return true;
-            }
+            builder.setTitle(getString(R.string.adb_title));
+            builder.setMessage(getString(R.string.adb_start_message) + " : " + selectedItem);
+            builder.setIcon(R.mipmap.office);
+            builder.setPositiveButton(getString(R.string.adb_btn_ok), null);
+            builder.show();
+            return true;
         });
         return root;
     }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CustomListViewFragmentND</string>
+    <string name="app_name">CustomListView Fragment ND</string>
     <string name="navigation_drawer_open">Ouvrir le menu de navigatio</string>
     <string name="navigation_drawer_close">Fermer le menu de navigation</string>
     <string name="nav_header_title">Android Studio</string>
@@ -10,10 +10,7 @@
     <string name="menu_home">Accueil</string>
     <string name="menu_gallery">Galerie</string>
     <string name="menu_slideshow">Diaporama</string>
-    <string name="menu_tools">Outils</string>
-    <string name="menu_share">Partager</string>
-    <string name="menu_send">Envoyer</string>
-    <string name="communicate">Communiquer</string>
+    <string name="text_home">Office 365</string>
 
     <!-- ListView -->
     <string name="image_description">Image d\'item</string>
@@ -29,4 +26,5 @@
     <string name="adb_start_message">Vous avez choisi</string>
     <string name="adb_title">Choix du Produit</string>
     <string name="adb_btn_ok">OK</string>
+    <string name="fab">fab</string>
 </resources>
